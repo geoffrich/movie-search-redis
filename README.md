@@ -2,6 +2,16 @@
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte);
 
+## TODO
+
+- sample data when no API key?
+- better mobile layout for search
+- nav
+- paginate
+- more resilient
+- handle no image on movie detail page
+- box shadow on movie details
+
 ## Creating a project
 
 If you're seeing this, you've probably already done this step. Congrats!

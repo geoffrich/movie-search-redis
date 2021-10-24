@@ -29,6 +29,10 @@
 	export let movies: Movie[];
 </script>
 
+<svelte:head>
+	<title>Search Results for "{query}"</title>
+</svelte:head>
+
 <h1>Search Results</h1>
 
 <Search {query} />
@@ -40,8 +44,10 @@
 			{#if movie.poster_path}
 				<img src="https://image.tmdb.org/t/p/w154{movie.poster_path}" alt="{movie.title} poster" />
 			{/if}
-			<span>{movie.title}</span>
+			<a href="/movie/{movie.id}">{movie.title}</a>
 		</li>
+	{:else}
+		<p>No results.</p>
 	{/each}
 </ul>
 

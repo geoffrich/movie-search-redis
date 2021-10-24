@@ -5,6 +5,12 @@ export interface SearchResponse {
 	total_pages: number;
 }
 
+export interface MovieCreditsResponse {
+	id: number;
+	cast: Cast[];
+	crew: Crew[];
+}
+
 export interface Movie {
 	adult: boolean;
 	backdrop_path: string | null;
@@ -53,4 +59,27 @@ export interface Language {
 export interface Country {
 	iso_3166_1: string;
 	name: string;
+}
+
+export interface Credit {
+	adult: boolean;
+	gender: number | null;
+	id: number;
+	known_for_department: string;
+	name: string;
+	original_name: string;
+	popularity: number;
+	profile_path: string | null;
+	credit_id: string;
+	order: number;
+}
+
+export interface Cast extends Credit {
+	cast_id: number;
+	character: string;
+}
+
+export interface Crew extends Credit {
+	department: string;
+	job: string;
 }
