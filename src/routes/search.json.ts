@@ -1,6 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import type { SearchResponse } from '$lib/types/tmdb';
-import { MOVIE_IDS_KEY } from '$lib/redis';
+import { MOVIE_IDS_KEY, initRedis } from '$lib/redis';
 
 import Redis from 'ioredis';
 
@@ -14,7 +14,7 @@ export const get: RequestHandler = async function ({ query }) {
 
 	try {
 		// TODO: use connection string
-		const redis = new Redis();
+		const redis = initRedis();
 		await redis.sadd(MOVIE_IDS_KEY, ...parsed.results.map((r) => r.id));
 	} catch (e) {
 		console.log(e);
