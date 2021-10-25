@@ -7,7 +7,7 @@
 	--primary-color: #b9c6d2;
 	--secondary-color: #d0dde9;
 	--tertiary-color: #edf0f8;
-	--accent-color: #ff3e00;
+	--accent-color: hsl(202, 74%, 26%);
 	--heading-color: rgba(0, 0, 0, 0.7);
 	--text-color: #444444;
 }
@@ -36,22 +36,24 @@ h2 {
 	color: var(--heading-color);
 }
 
-p {
+p,
+ul,
+dl {
 	line-height: 1.5;
 }
 
 a {
 	color: var(--accent-color);
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
 }
 
 h1 {
 	font-size: 2rem;
 	text-align: center;
+	margin: 1.5rem 0;
+}
+
+h2 {
+	margin: 1.7rem 0 1.2rem 0;
 }
 
 input,
@@ -72,4 +74,10 @@ button:focus:not(:focus-visible) {
 
 ul {
 	padding-left: 1rem;
+}
+
+dd,
+dl,
+ul {
+	margin: 0;
 }

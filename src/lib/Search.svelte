@@ -8,7 +8,7 @@
 	<label for="search">Search</label>
 	<div class="container">
 		<input type="text" id="search" name="query" bind:value={query} />
-		<button on:click={() => goto(`/search?query=${query}`)}>Go</button>
+		<button on:click={() => goto(`/search?query=${query}`, { keepfocus: true })}>Go</button>
 	</div>
 </form>
 

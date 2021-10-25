@@ -3,6 +3,12 @@
 </script>
 
 <div class="container">
+	<header>
+		<nav>
+			<a href="/">Search</a>
+			<a href="/movie/random">Random</a>
+		</nav>
+	</header>
 	<main>
 		<slot />
 	</main>
@@ -25,5 +31,10 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
+	}
+
+	nav {
+		display: flex;
+		gap: 1rem;
 	}
 </style>

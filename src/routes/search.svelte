@@ -41,12 +41,13 @@
 </script>
 
 <svelte:head>
-	<title>Search Results for "{query}"</title>
+	<title>Search Results for "{query}" - Page {currentPage}</title>
 </svelte:head>
 
 <h1>Search Results</h1>
 
 <Search {query} />
+<p>{searchResponse.total_results} results (page {currentPage} of {totalPages})</p>
 <ul>
 	{#each movies as movie (movie.id)}
 		<li>
@@ -79,6 +80,7 @@
 		padding: 0;
 		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 		gap: 0.5rem;
+		margin: 1rem 0;
 	}
 
 	img {
@@ -87,6 +89,6 @@
 
 	.links {
 		display: flex;
-		gap: 0.5rem;
+		gap: 1rem;
 	}
 </style>

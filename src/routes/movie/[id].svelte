@@ -24,7 +24,22 @@
 <script lang="ts">
 	import type { Movie } from '$lib/types';
 	import { getPosterUrl } from '$lib/image';
+	import { parse, format } from 'date-fns';
 	export let movie: Movie;
+
+	$: director = movie.crew.find(
+		(c) => c.role.localeCompare('director', undefined, { sensitivity: 'base' }) === 0
+	);
+
+	$: formattedDate = formatReleaseDate(movie.release_date);
+
+	function formatReleaseDate(date) {
+		if (date) {
+			const parsed = parse(movie.release_date, 'yyyy-MM-dd', new Date());
+			return format(parsed, 'MMM d, yyyy');
+		}
+		return undefined;
+	}
 </script>
 
 <svelte:head>
@@ -32,24 +47,33 @@
 </svelte:head>
 
 <h1>{movie.title}</h1>
-{#if movie.tagline}
-	<p class="tagline">{movie.tagline}</p>
-{/if}
+
 <div class="container">
 	<img src={getPosterUrl(movie.poster_path, 'w342')} alt="{movie.title} poster" />
 	<div>
+		{#if movie.tagline}
+			<p class="tagline">{movie.tagline}</p>
+		{/if}
 		<p>{movie.overview}</p>
 		<dl>
+			{#if formattedDate}
+				<dt>Release date</dt>
+				<dd>{formattedDate}</dd>
+			{/if}
+			{#if movie.runtime > 0}
+				<dt>Runtime</dt>
+				<dd>{movie.runtime} minutes</dd>
+			{/if}
+			{#if director}
+				<dt>Director</dt>
+				<dd>{director.name}</dd>
+			{/if}
 			{#if movie.genres.length > 0}
 				<dt>Genres</dt>
 				{#each movie.genres as genre}
 					<dd>{genre}</dd>
 				{/each}
 			{/if}
-			<dt>Release date</dt>
-			<dd>{movie.release_date}</dd>
-			<dt>Runtime</dt>
-			<dd>{movie.runtime} minutes</dd>
 			{#if movie.production_companies.length > 0}
 				<dt>Production companies</dt>
 				{#each movie.production_companies as company}
@@ -64,29 +88,42 @@
 	</div>
 </div>
 
-<h2>Cast</h2>
-<ul>
-	{#each movie.cast as cast}
-		<li><b>{cast.name}</b> as {cast.role}</li>
-	{/each}
-</ul>
+<div class="credit-grid">
+	<div>
+		<h2>Cast</h2>
+		{#if movie.cast.length > 0}
+			<ul>
+				{#each movie.cast as cast}
+					<li><b>{cast.name}</b> {cast.role ? `as ${cast.role}` : ''}</li>
+				{/each}
+			</ul>
+		{:else}
+			<p>No data</p>
+		{/if}
+	</div>
 
-<h2>Crew</h2>
-<ul>
-	{#each movie.crew as crew}
-		<li><b>{crew.name},</b> {crew.role}</li>
-	{/each}
-</ul>
+	<div>
+		<h2>Crew</h2>
+		{#if movie.crew.length > 0}
+			<ul>
+				{#each movie.crew as crew}
+					<li><b>{crew.name},</b> {crew.role}</li>
+				{/each}
+			</ul>
+		{:else}
+			<p>No data</p>
+		{/if}
+	</div>
+</div>
 
 <style>
 	.tagline {
 		font-style: italic;
-		text-align: center;
 	}
 
 	.container {
 		display: grid;
-		gap: 1rem;
+		gap: 1.5rem;
 		grid-template-columns: 1fr;
 	}
 
@@ -94,6 +131,11 @@
 		.container {
 			grid-template-columns: 250px 1fr;
 		}
+	}
+
+	.credit-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 	}
 
 	img {
@@ -106,7 +148,15 @@
 		margin-top: 0;
 	}
 
-	li + li {
-		margin-top: 0.25rem;
+	dt {
+		font-weight: 700;
+	}
+
+	dd {
+		margin-left: 0.5rem;
+	}
+
+	dd + dt {
+		margin-top: 0.5rem;
 	}
 </style>
