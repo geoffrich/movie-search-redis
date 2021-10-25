@@ -65,11 +65,11 @@
 
 <div class="links">
 	{#if previousPage}
-		<a href="/search?query={query}&page={previousPage}">Previous page</a>
+		<a href="/search?query={query}&page={previousPage}" sveltekit:prefetch>Previous page</a>
 	{/if}
 
 	{#if nextPage}
-		<a href="/search?query={query}&page={nextPage}">Next page</a>
+		<a href="/search?query={query}&page={nextPage}" sveltekit:prefetch>Next page</a>
 	{/if}
 </div>
 

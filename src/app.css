@@ -81,3 +81,7 @@ dl,
 ul {
 	margin: 0;
 }
+
+.bold {
+	font-weight: 700;
+}

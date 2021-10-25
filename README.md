@@ -6,11 +6,10 @@ Everything you need to build a Svelte project, powered by [`create-svelte`](http
 
 - sample data when no API key?
 - better mobile layout for search
-- nav
-- paginate
 - more resilient
 - handle no image on movie detail page
 - box shadow on movie details
+- loading state
 
 ## Creating a project
 

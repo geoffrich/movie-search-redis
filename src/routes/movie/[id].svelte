@@ -94,7 +94,7 @@
 		{#if movie.cast.length > 0}
 			<ul>
 				{#each movie.cast as cast}
-					<li><b>{cast.name}</b> {cast.role ? `as ${cast.role}` : ''}</li>
+					<li><span class="bold">{cast.name}</span> {cast.role ? `as ${cast.role}` : ''}</li>
 				{/each}
 			</ul>
 		{:else}
@@ -107,7 +107,7 @@
 		{#if movie.crew.length > 0}
 			<ul>
 				{#each movie.crew as crew}
-					<li><b>{crew.name},</b> {crew.role}</li>
+					<li><span class="bold">{crew.name},</span> {crew.role}</li>
 				{/each}
 			</ul>
 		{:else}
