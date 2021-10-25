@@ -4,13 +4,16 @@
 	export const load: Load = async function ({ page, fetch }) {
 		const { query } = page;
 		const searchQuery = query.get('query');
-		const result = await fetch(`/search.json?query=${searchQuery}`);
+		const resultPage = query.get('page') ?? 1;
+		const result = await fetch(`/search.json?query=${searchQuery}&page=${resultPage}`);
 		if (result.ok) {
+			const parsedResult = await result.json();
 			return {
 				props: {
 					query: searchQuery,
-					movies: await result.json()
-				}
+					searchResponse: parsedResult
+				},
+				maxage: 300
 			};
 		}
 
@@ -22,11 +25,19 @@
 </script>
 
 <script lang="ts">
-	import type { Movie } from '$lib/types/tmdb';
+	import type { Movie, SearchResponse } from '$lib/types/tmdb';
 	import Search from '$lib/Search.svelte';
 
 	export let query: string;
-	export let movies: Movie[];
+	export let searchResponse: SearchResponse;
+
+	let movies: Movie[] = [];
+
+	$: movies = searchResponse.results;
+	$: ({ page: currentPage, total_pages: totalPages } = searchResponse);
+
+	$: nextPage = currentPage < totalPages ? currentPage + 1 : null;
+	$: previousPage = currentPage > 1 ? currentPage - 1 : null;
 </script>
 
 <svelte:head>
@@ -51,6 +62,16 @@
 	{/each}
 </ul>
 
+<div class="links">
+	{#if previousPage}
+		<a href="/search?query={query}&page={previousPage}">Previous page</a>
+	{/if}
+
+	{#if nextPage}
+		<a href="/search?query={query}&page={nextPage}">Next page</a>
+	{/if}
+</div>
+
 <style>
 	ul {
 		display: grid;
@@ -62,5 +83,10 @@
 
 	img {
 		width: 100%;
+	}
+
+	.links {
+		display: flex;
+		gap: 0.5rem;
 	}
 </style>

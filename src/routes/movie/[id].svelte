@@ -9,7 +9,8 @@
 			return {
 				props: {
 					movie: await result.json()
-				}
+				},
+				maxage: 300
 			};
 		}
 
