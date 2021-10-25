@@ -24,6 +24,7 @@
 <script lang="ts">
 	import type { Movie } from '$lib/types';
 	import { getPosterUrl } from '$lib/image';
+	import FallbackPoster from '$lib/FallbackPoster.svelte';
 	import { parse, format } from 'date-fns';
 	export let movie: Movie;
 
@@ -49,7 +50,13 @@
 <h1>{movie.title}</h1>
 
 <div class="container">
-	<img src={getPosterUrl(movie.poster_path, 'w342')} alt="{movie.title} poster" />
+	<div class="poster">
+		{#if movie.poster_path}
+			<img src={getPosterUrl(movie.poster_path, 'w342')} alt="{movie.title} poster" />
+		{:else}
+			<FallbackPoster />
+		{/if}
+	</div>
 	<div>
 		{#if movie.tagline}
 			<p class="tagline">{movie.tagline}</p>
@@ -138,7 +145,7 @@
 		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 	}
 
-	img {
+	.poster {
 		width: 100%;
 		max-width: 250px;
 		justify-self: center;
@@ -158,5 +165,9 @@
 
 	dd + dt {
 		margin-top: 0.5rem;
+	}
+
+	img {
+		box-shadow: var(--shadow-med);
 	}
 </style>

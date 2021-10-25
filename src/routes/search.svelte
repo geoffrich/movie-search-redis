@@ -26,7 +26,9 @@
 
 <script lang="ts">
 	import type { Movie, SearchResponse } from '$lib/types/tmdb';
+	import { getPosterUrl } from '$lib/image';
 	import Search from '$lib/Search.svelte';
+	import FallbackPoster from '$lib/FallbackPoster.svelte';
 
 	export let query: string;
 	export let searchResponse: SearchResponse;
@@ -38,6 +40,13 @@
 
 	$: nextPage = currentPage < totalPages ? currentPage + 1 : null;
 	$: previousPage = currentPage > 1 ? currentPage - 1 : null;
+
+	function getReleaseYear({ release_date }: Movie) {
+		if (release_date) {
+			return `(${release_date.split('-')[0]})`;
+		}
+		return '';
+	}
 </script>
 
 <svelte:head>
@@ -51,12 +60,18 @@
 <ul>
 	{#each movies as movie (movie.id)}
 		<li>
-			<!-- TODO: get from config endpoint -->
-			<!-- TODO: handle no poster -->
+			<!-- TODO: get path from config endpoint -->
 			{#if movie.poster_path}
-				<img src="https://image.tmdb.org/t/p/w154{movie.poster_path}" alt="{movie.title} poster" />
+				<img
+					src={getPosterUrl(movie.poster_path, 'w185')}
+					height="258"
+					width="158"
+					alt="{movie.title} poster"
+				/>
+			{:else}
+				<FallbackPoster />
 			{/if}
-			<a href="/movie/{movie.id}">{movie.title}</a>
+			<a href="/movie/{movie.id}">{movie.title} {getReleaseYear(movie)}</a>
 		</li>
 	{:else}
 		<p>No results.</p>
@@ -79,16 +94,22 @@
 		list-style: none;
 		padding: 0;
 		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-		gap: 0.5rem;
+		gap: 1rem;
 		margin: 1rem 0;
 	}
 
-	img {
-		width: 100%;
+	li {
+		display: grid;
+		gap: 0.5rem;
 	}
 
 	.links {
 		display: flex;
 		gap: 1rem;
+	}
+
+	img {
+		box-shadow: var(--shadow-med);
+		height: auto;
 	}
 </style>
