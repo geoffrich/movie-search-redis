@@ -12,6 +12,7 @@ export interface Movie {
 	runtime: number | null;
 	tagline: string | null;
 	title: string;
+	imdb_id: string | null;
 
 	cast: Credit[];
 	crew: Credit[];

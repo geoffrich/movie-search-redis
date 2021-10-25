@@ -105,6 +105,7 @@ function adaptResponse(movie: TMDB.Movie, credits: TMDB.MovieCreditsResponse): M
 		revenue: movie.revenue,
 		runtime: movie.runtime,
 		tagline: movie.tagline,
-		title: movie.title
+		title: movie.title,
+		imdb_id: movie.imdb_id
 	};
 }

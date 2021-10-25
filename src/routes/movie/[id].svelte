@@ -91,6 +91,11 @@
 				<dt>Budget</dt>
 				<dd>{movie.budget.toLocaleString()}</dd>
 			{/if}
+			<dt>Links</dt>
+			{#if movie.imdb_id}
+				<dd><a href="https://www.imdb.com/title/{movie.imdb_id}/">IMDB</a></dd>
+			{/if}
+			<dd><a href="https://www.themoviedb.org/movie/{movie.id}">TMDB</a></dd>
 		</dl>
 	</div>
 </div>

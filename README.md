@@ -8,7 +8,6 @@ Everything you need to build a Svelte project, powered by [`create-svelte`](http
 - better mobile layout for search
 - more resilient
 - loading state
-- fallback when aspect ratio not supported
 
 ## Creating a project
 
