@@ -7,10 +7,8 @@ Everything you need to build a Svelte project, powered by [`create-svelte`](http
 - sample data when no API key?
 - better mobile layout for search
 - more resilient
-- handle no image on movie detail page
-- box shadow on movie details
 - loading state
-- subgrid?
+- fallback when aspect ratio not supported
 
 ## Creating a project
 

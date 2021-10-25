@@ -13,5 +13,3 @@
 <h1>Search Movies</h1>
 
 <Search />
-
-<p>Credit TMDB</p>
