@@ -13,6 +13,7 @@ export const get: RequestHandler = async function ({ query }) {
 	try {
 		const redis = initRedis();
 		await redis.sadd(MOVIE_IDS_KEY, ...parsed.results.map((r) => r.id));
+		await redis.quit();
 	} catch (e) {
 		console.log(e);
 	}

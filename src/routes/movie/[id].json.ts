@@ -24,6 +24,7 @@ export const get: RequestHandler = async function ({ params }) {
 
 	const result = await getMovieDetailsFromApi(redis, id);
 	const { movie: apiMovie, credits: apiCredits, status } = result;
+	await redis.quit();
 	if (status) {
 		return {
 			status
