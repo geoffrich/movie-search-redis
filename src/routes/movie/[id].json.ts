@@ -1,8 +1,8 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import type * as TMDB from '$lib/types/tmdb';
 import type { Movie, MovieDetails } from '$lib/types';
-import { getMovieKey } from '$lib/redis';
-import Redis from 'ioredis';
+import { getMovieKey, initRedis } from '$lib/redis';
+import type Redis from 'ioredis';
 
 export const get: RequestHandler = async function ({ params }) {
 	const { id: rawId } = params;
@@ -14,7 +14,7 @@ export const get: RequestHandler = async function ({ params }) {
 		};
 	}
 
-	const redis = new Redis();
+	const redis = initRedis();
 	const { movie, credits } = await getMovieDetailsFromCache(redis, id);
 	if (movie && credits) {
 		return {
