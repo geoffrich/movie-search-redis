@@ -1,27 +1,10 @@
-# create-svelte
+# movie-search-redis
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte);
+Demo for a blog post about SvelteKit + Serverless Redis using [Upstash](https://www.upstash.com/).
 
-## TODO
+To run locally, you will need to create a `.env` files with the required keys. See `sample.env` for an example.
 
-- sample data when no API key?
-- better mobile layout for search
-- more resilient
-- loading state
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm init svelte@next
-
-# create a new project in my-app
-npm init svelte@next my-app
-```
-
-> Note: the `@next` is temporary
+You will need a [TMDB API](https://developers.themoviedb.org/3/getting-started/introduction) key. If no Redis connection string is provided, the app will attempt to connect to a local Redis server.
 
 ## Developing
 
