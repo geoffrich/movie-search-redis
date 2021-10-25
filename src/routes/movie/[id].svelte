@@ -169,5 +169,6 @@
 
 	img {
 		box-shadow: var(--shadow-med);
+		width: 100%;
 	}
 </style>

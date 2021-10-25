@@ -99,8 +99,10 @@
 	}
 
 	li {
+		grid-row: span 2;
 		display: grid;
 		gap: 0.5rem;
+		grid-template-rows: subgrid;
 	}
 
 	.links {
