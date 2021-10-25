@@ -60,7 +60,6 @@
 <ul>
 	{#each movies as movie (movie.id)}
 		<li>
-			<!-- TODO: get path from config endpoint -->
 			{#if movie.poster_path}
 				<img
 					src={getPosterUrl(movie.poster_path, 'w185')}

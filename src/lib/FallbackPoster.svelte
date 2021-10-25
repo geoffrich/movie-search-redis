@@ -26,4 +26,17 @@
 		height: 3rem;
 		width: 3rem;
 	}
+
+	@supports (aspect-ratio: 2 / 3) {
+		.no-movie {
+			padding-top: 150%;
+			position: relative;
+		}
+
+		svg {
+			position: absolute;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+	}
 </style>
