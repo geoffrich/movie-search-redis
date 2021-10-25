@@ -10,6 +10,7 @@ Everything you need to build a Svelte project, powered by [`create-svelte`](http
 - handle no image on movie detail page
 - box shadow on movie details
 - loading state
+- subgrid?
 
 ## Creating a project
 
