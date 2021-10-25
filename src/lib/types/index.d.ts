@@ -1,3 +1,5 @@
+import type * as TMDB from './tmdb';
+
 export interface Movie {
 	budget: number;
 	genres: string[];
@@ -18,4 +20,9 @@ export interface Movie {
 export interface Credit {
 	name: string;
 	role: string;
+}
+
+export interface MovieDetails {
+	movie: TMDB.Movie;
+	credits: TMDB.MovieCreditsResponse;
 }
