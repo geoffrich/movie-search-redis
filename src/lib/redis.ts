@@ -1,4 +1,4 @@
-export const MOVIE_IDS_KEY = 'movieids';
+export const MOVIE_IDS_KEY = 'movie_ids';
 import Redis from 'ioredis';
 
 const connectionString = process.env['REDIS_CONNECTION'];

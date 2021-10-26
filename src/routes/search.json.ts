@@ -2,6 +2,8 @@ import type { RequestHandler } from '@sveltejs/kit';
 import type { SearchResponse } from '$lib/types/tmdb';
 import { MOVIE_IDS_KEY, initRedis } from '$lib/redis';
 
+const VOTE_THRESHOLD = 20;
+
 export const get: RequestHandler = async function ({ query }) {
 	const searchQuery = query.get('query');
 	const page = query.get('page') ?? 1;
@@ -10,9 +12,17 @@ export const get: RequestHandler = async function ({ query }) {
 	);
 	const parsed: SearchResponse = await response.json();
 
+	// filter out obscure movies
+	const filteredMovies = parsed.results.filter((movie) => movie.vote_count >= VOTE_THRESHOLD);
+	const removedMovies = parsed.results.filter((movie) => movie.vote_count < 20);
+	console.log(
+		'Filtered out:',
+		removedMovies.map((m) => m.title)
+	);
+
 	try {
 		const redis = initRedis();
-		await redis.sadd(MOVIE_IDS_KEY, ...parsed.results.map((r) => r.id));
+		await redis.sadd(MOVIE_IDS_KEY, ...filteredMovies.map((r) => r.id));
 		await redis.quit();
 	} catch (e) {
 		console.log(e);
