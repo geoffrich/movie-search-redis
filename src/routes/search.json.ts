@@ -20,12 +20,14 @@ export const get: RequestHandler = async function ({ query }) {
 		removedMovies.map((m) => m.title)
 	);
 
-	try {
-		const redis = initRedis();
-		await redis.sadd(MOVIE_IDS_KEY, ...filteredMovies.map((r) => r.id));
-		await redis.quit();
-	} catch (e) {
-		console.log(e);
+	if (filteredMovies.length > 0) {
+		try {
+			const redis = initRedis();
+			await redis.sadd(MOVIE_IDS_KEY, ...filteredMovies.map((r) => r.id));
+			await redis.quit();
+		} catch (e) {
+			console.log(e);
+		}
 	}
 
 	return {
