@@ -2,7 +2,6 @@ import type { RequestHandler } from '@sveltejs/kit';
 import type * as TMDB from '$lib/types/tmdb';
 import type { Movie, MovieDetails } from '$lib/types';
 import redis, { getMovieKey } from '$lib/redis';
-import type Redis from 'ioredis';
 
 export const get: RequestHandler = async function ({ params }) {
 	const { id: rawId } = params;
@@ -36,11 +35,15 @@ export const get: RequestHandler = async function ({ params }) {
 };
 
 async function getMovieDetailsFromCache(id: number): Promise<MovieDetails | Record<string, never>> {
-	const cached: string = await redis.get(getMovieKey(id));
-	if (cached) {
-		const parsed: MovieDetails = JSON.parse(cached);
-		console.log(`Found ${id} in cache`);
-		return parsed;
+	try {
+		const cached: string = await redis.get(getMovieKey(id));
+		if (cached) {
+			const parsed: MovieDetails = JSON.parse(cached);
+			console.log(`Found ${id} in cache`);
+			return parsed;
+		}
+	} catch (e) {
+		console.log('Unable to retrieve from cache', id, e);
 	}
 	return {};
 }
@@ -50,7 +53,7 @@ async function getMovieDetailsFromApi(id: number) {
 	if (movieResponse.ok) {
 		const movie = await movieResponse.json();
 		const credits = await creditsResponse.json();
-		await cacheMovieResponse(redis, id, movie, credits);
+		await cacheMovieResponse(id, movie, credits);
 		return {
 			movie,
 			credits
@@ -62,7 +65,7 @@ async function getMovieDetailsFromApi(id: number) {
 	};
 }
 
-async function cacheMovieResponse(redis: Redis, id: number, movie, credits) {
+async function cacheMovieResponse(id: number, movie, credits) {
 	try {
 		const cache: MovieDetails = {
 			movie,
