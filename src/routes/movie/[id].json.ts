@@ -1,11 +1,12 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import type * as TMDB from '$lib/types/tmdb';
 import type { Movie, MovieDetails } from '$lib/types';
-import { getMovieKey, initRedis } from '$lib/redis';
+import redis, { getMovieKey } from '$lib/redis';
 import type Redis from 'ioredis';
 
 export const get: RequestHandler = async function ({ params }) {
 	const { id: rawId } = params;
+
 	// validate and sanitize the input
 	const id = parseInt(rawId);
 	if (isNaN(id)) {
@@ -14,18 +15,15 @@ export const get: RequestHandler = async function ({ params }) {
 		};
 	}
 
-	const redis = initRedis();
-	const { movie, credits } = await getMovieDetailsFromCache(redis, id);
+	const { movie, credits } = await getMovieDetailsFromCache(id);
 	if (movie && credits) {
-		await redis.quit();
 		return {
 			body: adaptResponse(movie, credits)
 		};
 	}
 
-	const result = await getMovieDetailsFromApi(redis, id);
+	const result = await getMovieDetailsFromApi(id);
 	const { movie: apiMovie, credits: apiCredits, status } = result;
-	await redis.quit();
 	if (status) {
 		return {
 			status
@@ -37,10 +35,7 @@ export const get: RequestHandler = async function ({ params }) {
 	};
 };
 
-async function getMovieDetailsFromCache(
-	redis: Redis,
-	id: number
-): Promise<MovieDetails | Record<string, never>> {
+async function getMovieDetailsFromCache(id: number): Promise<MovieDetails | Record<string, never>> {
 	const cached: string = await redis.get(getMovieKey(id));
 	if (cached) {
 		const parsed: MovieDetails = JSON.parse(cached);
@@ -50,7 +45,7 @@ async function getMovieDetailsFromCache(
 	return {};
 }
 
-async function getMovieDetailsFromApi(redis: Redis, id: number) {
+async function getMovieDetailsFromApi(id: number) {
 	const [movieResponse, creditsResponse] = await Promise.all([getMovieDetails(id), getCredits(id)]);
 	if (movieResponse.ok) {
 		const movie = await movieResponse.json();

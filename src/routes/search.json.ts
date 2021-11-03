@@ -1,6 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import type { SearchResponse } from '$lib/types/tmdb';
-import { MOVIE_IDS_KEY, initRedis } from '$lib/redis';
+import redis, { MOVIE_IDS_KEY } from '$lib/redis';
 
 const VOTE_THRESHOLD = 20;
 
@@ -22,9 +22,7 @@ export const get: RequestHandler = async function ({ query }) {
 
 	if (filteredMovies.length > 0) {
 		try {
-			const redis = initRedis();
 			await redis.sadd(MOVIE_IDS_KEY, ...filteredMovies.map((r) => r.id));
-			await redis.quit();
 		} catch (e) {
 			console.log(e);
 		}

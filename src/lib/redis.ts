@@ -7,6 +7,4 @@ export function getMovieKey(id): string {
 	return `movie:${id}`;
 }
 
-export function initRedis(): Redis {
-	return connectionString ? new Redis(connectionString) : new Redis();
-}
+export default connectionString ? new Redis(connectionString) : new Redis();
