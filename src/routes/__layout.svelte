@@ -6,7 +6,6 @@
 	<header>
 		<nav>
 			<a href="/">Search</a>
-			<a href="/movie/random">Random</a>
 		</nav>
 	</header>
 	<main>
