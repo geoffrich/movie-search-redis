@@ -89,3 +89,8 @@ ul {
 .bold {
 	font-weight: 700;
 }
+
+input {
+	/** Remove shadow on Safari iOS */
+	-webkit-appearance: none;
+}
