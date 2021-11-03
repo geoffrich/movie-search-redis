@@ -13,6 +13,8 @@ export interface Movie {
 	tagline: string | null;
 	title: string;
 	imdb_id: string | null;
+	vote_average: number;
+	vote_count: number;
 
 	cast: Credit[];
 	crew: Credit[];

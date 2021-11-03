@@ -17,6 +17,7 @@ export const get: RequestHandler = async function ({ params }) {
 	const redis = initRedis();
 	const { movie, credits } = await getMovieDetailsFromCache(redis, id);
 	if (movie && credits) {
+		await redis.quit();
 		return {
 			body: adaptResponse(movie, credits)
 		};
@@ -107,6 +108,8 @@ function adaptResponse(movie: TMDB.Movie, credits: TMDB.MovieCreditsResponse): M
 		runtime: movie.runtime,
 		tagline: movie.tagline,
 		title: movie.title,
-		imdb_id: movie.imdb_id
+		imdb_id: movie.imdb_id,
+		vote_average: movie.vote_average,
+		vote_count: movie.vote_count
 	};
 }

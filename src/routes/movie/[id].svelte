@@ -87,6 +87,17 @@
 					<dd>{company}</dd>
 				{/each}
 			{/if}
+			{#if movie.vote_count}
+				<dt
+					class="rating"
+					class:low={movie.vote_average < 5}
+					class:middle={movie.vote_average >= 5 && movie.vote_average < 8}
+					class:high={movie.vote_average >= 8}
+				>
+					Rating
+				</dt>
+				<dd>{movie.vote_average} ({movie.vote_count} votes)</dd>
+			{/if}
 			{#if movie.budget > 0}
 				<dt>Budget</dt>
 				<dd>{movie.budget.toLocaleString()}</dd>
@@ -175,5 +186,29 @@
 	img {
 		box-shadow: var(--shadow-med);
 		width: 100%;
+	}
+
+	.rating.low {
+		--rating-color: #dc2626;
+	}
+
+	.rating.middle {
+		--rating-color: #fbbf24;
+	}
+
+	.rating.high {
+		--rating-color: #059669;
+	}
+
+	.rating::after {
+		content: '';
+		width: 1rem;
+		background-color: var(--rating-color);
+		display: inline-block;
+		height: 1rem;
+		border-radius: 50%;
+		vertical-align: middle;
+		position: relative;
+		left: 0.25rem;
 	}
 </style>
