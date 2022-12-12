@@ -5,15 +5,7 @@ import redis, { getMovieKey } from '$lib/redis';
 import { env } from '$env/dynamic/private';
 
 export const load: ServerLoad = async function ({ params }) {
-	const { id: rawId } = params;
-
-	// validate and sanitize the input
-	// TODO: move to matcher
-	const id = parseInt(rawId);
-	if (isNaN(id)) {
-		throw error(404, 'movie not found');
-	}
-
+	const id = parseInt(params.id ?? '');
 	const { movie, credits } = await getMovieDetailsFromCache(id);
 	if (movie && credits) {
 		return {
