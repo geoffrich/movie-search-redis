@@ -2,7 +2,7 @@ import { error, type ServerLoad } from '@sveltejs/kit';
 import type * as TMDB from '$lib/types/tmdb';
 import type { Movie, MovieDetails } from '$lib/types';
 import redis, { getMovieKey } from '$lib/redis';
-import { env } from '$env/dynamic/private';
+import { TMDB_API_KEY } from '$env/static/private';
 
 export const load: ServerLoad = async function ({ params }) {
 	const id = parseInt(params.id ?? '');
@@ -69,13 +69,11 @@ async function cacheMovieResponse(
 }
 
 async function getMovieDetails(id: number) {
-	return await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${env.TMDB_API_KEY}`);
+	return await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${TMDB_API_KEY}`);
 }
 
 async function getCredits(id: number) {
-	return await fetch(
-		`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${env.TMDB_API_KEY}`
-	);
+	return await fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${TMDB_API_KEY}`);
 }
 
 function adaptResponse(movie: TMDB.Movie, credits: TMDB.MovieCreditsResponse): Movie {

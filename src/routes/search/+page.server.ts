@@ -1,7 +1,7 @@
 import type { ServerLoad } from '@sveltejs/kit';
 import type { SearchResponse } from '$lib/types/tmdb';
 import redis, { MOVIE_IDS_KEY } from '$lib/redis';
-import { env } from '$env/dynamic/private';
+import { TMDB_API_KEY } from '$env/static/private';
 
 const VOTE_THRESHOLD = 20;
 
@@ -9,7 +9,7 @@ export const load: ServerLoad = async function ({ url, setHeaders }) {
 	const searchQuery = url.searchParams.get('query');
 	const page = url.searchParams.get('page') ?? 1;
 	const response = await fetch(
-		`https://api.themoviedb.org/3/search/movie?api_key=${env.TMDB_API_KEY}&page=${page}&include_adult=false&query=${searchQuery}`
+		`https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&page=${page}&include_adult=false&query=${searchQuery}`
 	);
 	const parsed: SearchResponse = await response.json();
 
