@@ -31,7 +31,7 @@ export const load: ServerLoad = async function ({ params }) {
 
 async function getMovieDetailsFromCache(id: number): Promise<MovieDetails | Record<string, never>> {
 	try {
-		const cached: string = await redis.get(getMovieKey(id));
+		const cached = await redis.get(getMovieKey(id));
 		if (cached) {
 			const parsed: MovieDetails = JSON.parse(cached);
 			console.log(`Found ${id} in cache`);
@@ -59,7 +59,11 @@ async function getMovieDetailsFromApi(id: number) {
 	throw error(500, 'unable to retrieve movie details from API');
 }
 
-async function cacheMovieResponse(id: number, movie, credits) {
+async function cacheMovieResponse(
+	id: number,
+	movie: TMDB.Movie,
+	credits: TMDB.MovieCreditsResponse
+) {
 	try {
 		const cache: MovieDetails = {
 			movie,

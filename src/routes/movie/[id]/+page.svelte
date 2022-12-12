@@ -16,7 +16,7 @@
 
 	$: formattedDate = formatReleaseDate(movie.release_date);
 
-	function formatReleaseDate(date) {
+	function formatReleaseDate(date: string) {
 		if (date) {
 			const parsed = parse(movie.release_date, 'yyyy-MM-dd', new Date());
 			return format(parsed, 'MMM d, yyyy');
@@ -49,7 +49,7 @@
 				<dt>Release date</dt>
 				<dd>{formattedDate}</dd>
 			{/if}
-			{#if movie.runtime > 0}
+			{#if movie.runtime && movie.runtime > 0}
 				<dt>Runtime</dt>
 				<dd>{movie.runtime} minutes</dd>
 			{/if}
