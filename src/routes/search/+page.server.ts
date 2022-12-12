@@ -1,14 +1,16 @@
-import type { RequestHandler } from '@sveltejs/kit';
+import type { ServerLoad } from '@sveltejs/kit';
 import type { SearchResponse } from '$lib/types/tmdb';
 import redis, { MOVIE_IDS_KEY } from '$lib/redis';
+import { env } from '$env/dynamic/private';
 
 const VOTE_THRESHOLD = 20;
 
-export const get: RequestHandler = async function ({ query }) {
-	const searchQuery = query.get('query');
-	const page = query.get('page') ?? 1;
+export const load: ServerLoad = async function ({ url }) {
+	const searchQuery = url.searchParams.get('query');
+	const page = url.searchParams.get('page') ?? 1;
+	// TODO: env vars
 	const response = await fetch(
-		`https://api.themoviedb.org/3/search/movie?api_key=${process.env['TMDB_API_KEY']}&page=${page}&include_adult=false&query=${searchQuery}`
+		`https://api.themoviedb.org/3/search/movie?api_key=${env.TMDB_API_KEY}&page=${page}&include_adult=false&query=${searchQuery}`
 	);
 	const parsed: SearchResponse = await response.json();
 
@@ -28,7 +30,8 @@ export const get: RequestHandler = async function ({ query }) {
 		}
 	}
 
+	// TODO: maxage: 300
 	return {
-		body: parsed
+		searchResponse: parsed
 	};
 };

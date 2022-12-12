@@ -1,36 +1,31 @@
-import type { RequestHandler } from '@sveltejs/kit';
+import { error, type ServerLoad } from '@sveltejs/kit';
 import type * as TMDB from '$lib/types/tmdb';
 import type { Movie, MovieDetails } from '$lib/types';
 import redis, { getMovieKey } from '$lib/redis';
+import { env } from '$env/dynamic/private';
 
-export const get: RequestHandler = async function ({ params }) {
+export const load: ServerLoad = async function ({ params }) {
 	const { id: rawId } = params;
 
 	// validate and sanitize the input
+	// TODO: move to matcher
 	const id = parseInt(rawId);
 	if (isNaN(id)) {
-		return {
-			status: 400
-		};
+		throw error(404, 'movie not found');
 	}
 
 	const { movie, credits } = await getMovieDetailsFromCache(id);
 	if (movie && credits) {
 		return {
-			body: adaptResponse(movie, credits)
+			movie: adaptResponse(movie, credits)
 		};
 	}
 
 	const result = await getMovieDetailsFromApi(id);
-	const { movie: apiMovie, credits: apiCredits, status } = result;
-	if (status) {
-		return {
-			status
-		};
-	}
+	const { movie: apiMovie, credits: apiCredits } = result;
 
 	return {
-		body: adaptResponse(apiMovie, apiCredits)
+		movie: adaptResponse(apiMovie, apiCredits)
 	};
 };
 
@@ -60,9 +55,8 @@ async function getMovieDetailsFromApi(id: number) {
 		};
 	}
 
-	return {
-		status: movieResponse.status
-	};
+	console.log('Bad status from API', movieResponse.status);
+	throw error(500, 'unable to retrieve movie details from API');
 }
 
 async function cacheMovieResponse(id: number, movie, credits) {
@@ -79,14 +73,12 @@ async function cacheMovieResponse(id: number, movie, credits) {
 }
 
 async function getMovieDetails(id: number) {
-	return await fetch(
-		`https://api.themoviedb.org/3/movie/${id}?api_key=${process.env['TMDB_API_KEY']}`
-	);
+	return await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${env.TMDB_API_KEY}`);
 }
 
 async function getCredits(id: number) {
 	return await fetch(
-		`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${process.env['TMDB_API_KEY']}`
+		`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${env.TMDB_API_KEY}`
 	);
 }
 

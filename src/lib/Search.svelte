@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 
-	export let query = null;
+	export let query: string | null = null;
 </script>
 
 <form on:submit|preventDefault action="/search" method="get">
 	<label for="search">Search</label>
 	<div class="container">
 		<input type="text" id="search" name="query" bind:value={query} />
-		<button on:click={() => goto(`/search?query=${query}`, { keepfocus: true })}>Go</button>
+		<button on:click={() => goto(`/search?query=${query}`, { keepFocus: true })}>Go</button>
 	</div>
 </form>
 
