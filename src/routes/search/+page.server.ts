@@ -5,10 +5,9 @@ import { env } from '$env/dynamic/private';
 
 const VOTE_THRESHOLD = 20;
 
-export const load: ServerLoad = async function ({ url }) {
+export const load: ServerLoad = async function ({ url, setHeaders }) {
 	const searchQuery = url.searchParams.get('query');
 	const page = url.searchParams.get('page') ?? 1;
-	// TODO: env vars
 	const response = await fetch(
 		`https://api.themoviedb.org/3/search/movie?api_key=${env.TMDB_API_KEY}&page=${page}&include_adult=false&query=${searchQuery}`
 	);
@@ -30,7 +29,9 @@ export const load: ServerLoad = async function ({ url }) {
 		}
 	}
 
-	// TODO: maxage: 300
+	setHeaders({
+		'cache-control': 'max-age=300'
+	});
 	return {
 		searchResponse: parsed
 	};
