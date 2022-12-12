@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { Movie } from '$lib/types';
 	import { getPosterUrl } from '$lib/image';
 	import FallbackPoster from '$lib/FallbackPoster.svelte';
 	import { parse, format } from 'date-fns';
