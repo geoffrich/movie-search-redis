@@ -1,11 +1,11 @@
-import type { ServerLoad } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 import type { SearchResponse } from '$lib/types/tmdb';
 import redis, { MOVIE_IDS_KEY } from '$lib/redis';
 import { TMDB_API_KEY } from '$env/static/private';
 
 const VOTE_THRESHOLD = 20;
 
-export const load: ServerLoad = async function ({ url, setHeaders }) {
+export const load: PageServerLoad = async function ({ url, setHeaders }) {
 	const searchQuery = url.searchParams.get('query');
 	const page = url.searchParams.get('page') ?? 1;
 	const response = await fetch(

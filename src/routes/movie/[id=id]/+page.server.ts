@@ -1,10 +1,11 @@
-import { error, type ServerLoad } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types'; // TODO: check other places
 import type * as TMDB from '$lib/types/tmdb';
 import type { Movie, MovieDetails } from '$lib/types';
 import redis, { getMovieKey } from '$lib/redis';
 import { TMDB_API_KEY } from '$env/static/private';
 
-export const load: ServerLoad = async function ({ params }) {
+export const load: PageServerLoad = async function ({ params }) {
 	const id = parseInt(params.id ?? '');
 	const { movie, credits } = await getMovieDetailsFromCache(id);
 	if (movie && credits) {
