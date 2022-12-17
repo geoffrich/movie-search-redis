@@ -1,3 +1,5 @@
 {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "html.format.wrapLineLength": 80,
+    "editor.wordWrap": "on"
 }
