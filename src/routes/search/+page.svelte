@@ -1,42 +1,19 @@
-<script context="module" lang="ts">
-	import type { Load } from '@sveltejs/kit';
-
-	export const load: Load = async function ({ page, fetch }) {
-		const { query } = page;
-		const searchQuery = query.get('query');
-		const resultPage = query.get('page') ?? 1;
-		const result = await fetch(`/search.json?query=${searchQuery}&page=${resultPage}`);
-		if (result.ok) {
-			const parsedResult = await result.json();
-			return {
-				props: {
-					query: searchQuery,
-					searchResponse: parsedResult
-				},
-				maxage: 300
-			};
-		}
-
-		return {
-			status: result.status,
-			error: new Error('Could not perform search')
-		};
-	};
-</script>
-
 <script lang="ts">
 	import type { Movie, SearchResponse } from '$lib/types/tmdb';
 	import { getPosterUrl } from '$lib/image';
 	import Search from '$lib/Search.svelte';
 	import FallbackPoster from '$lib/FallbackPoster.svelte';
+	import type { PageData } from './$types';
+	import { page } from '$app/stores';
 
-	export let query: string;
-	export let searchResponse: SearchResponse;
+	export let data: PageData;
 
 	let movies: Movie[] = [];
 
-	$: movies = searchResponse.results;
-	$: ({ page: currentPage, total_pages: totalPages } = searchResponse);
+	$: query = $page.url.searchParams.get('query');
+
+	$: movies = data.searchResponse.results;
+	$: ({ page: currentPage, total_pages: totalPages } = data.searchResponse);
 
 	$: nextPage = currentPage < totalPages ? currentPage + 1 : null;
 	$: previousPage = currentPage > 1 ? currentPage - 1 : null;
@@ -56,7 +33,7 @@
 <h1>Search Results</h1>
 
 <Search {query} />
-<p>{searchResponse.total_results} results (page {currentPage} of {totalPages})</p>
+<p>{data.searchResponse.total_results} results (page {currentPage} of {totalPages})</p>
 <ul>
 	{#each movies as movie (movie.id)}
 		<li>
@@ -79,11 +56,11 @@
 
 <div class="links">
 	{#if previousPage}
-		<a href="/search?query={query}&page={previousPage}" sveltekit:prefetch>Previous page</a>
+		<a href="/search?query={query}&page={previousPage}">Previous page</a>
 	{/if}
 
 	{#if nextPage}
-		<a href="/search?query={query}&page={nextPage}" sveltekit:prefetch>Next page</a>
+		<a href="/search?query={query}&page={nextPage}">Next page</a>
 	{/if}
 </div>
 

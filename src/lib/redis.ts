@@ -1,12 +1,11 @@
 import Redis from 'ioredis';
-
-const connectionString = process.env['REDIS_CONNECTION'];
+import { REDIS_CONNECTION } from '$env/static/private';
 
 export const MOVIE_IDS_KEY = 'movie_ids';
 
 /** Return the key used to store movie details for a given ID in Redis */
-export function getMovieKey(id): string {
+export function getMovieKey(id: number): string {
 	return `movie:${id}`;
 }
 
-export default connectionString ? new Redis(connectionString) : new Redis();
+export default REDIS_CONNECTION ? new Redis(REDIS_CONNECTION) : new Redis();

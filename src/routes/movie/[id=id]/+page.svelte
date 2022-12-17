@@ -1,32 +1,12 @@
-<script context="module" lang="ts">
-	import type { Load } from '@sveltejs/kit';
-
-	export const load: Load = async function ({ page, fetch }) {
-		const { params } = page;
-		const { id } = params;
-		const result = await fetch(`/movie/${id}.json`);
-		if (result.ok) {
-			return {
-				props: {
-					movie: await result.json()
-				},
-				maxage: 300
-			};
-		}
-
-		return {
-			status: result.status,
-			error: new Error('Could not retrieve id ' + id)
-		};
-	};
-</script>
-
 <script lang="ts">
-	import type { Movie } from '$lib/types';
 	import { getPosterUrl } from '$lib/image';
 	import FallbackPoster from '$lib/FallbackPoster.svelte';
 	import { parse, format } from 'date-fns';
-	export let movie: Movie;
+	import type { PageData } from './$types';
+
+	export let data: PageData;
+
+	$: movie = data.movie;
 
 	$: director = movie.crew.find(
 		(c) => c.role.localeCompare('director', undefined, { sensitivity: 'base' }) === 0
@@ -34,7 +14,7 @@
 
 	$: formattedDate = formatReleaseDate(movie.release_date);
 
-	function formatReleaseDate(date) {
+	function formatReleaseDate(date: string) {
 		if (date) {
 			const parsed = parse(movie.release_date, 'yyyy-MM-dd', new Date());
 			return format(parsed, 'MMM d, yyyy');
@@ -67,7 +47,7 @@
 				<dt>Release date</dt>
 				<dd>{formattedDate}</dd>
 			{/if}
-			{#if movie.runtime > 0}
+			{#if movie.runtime && movie.runtime > 0}
 				<dt>Runtime</dt>
 				<dd>{movie.runtime} minutes</dd>
 			{/if}
