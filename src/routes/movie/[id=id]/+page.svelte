@@ -6,7 +6,6 @@
 
 	export let data: PageData;
 
-	// TODO: better way?
 	$: movie = data.movie;
 
 	$: director = movie.crew.find(
