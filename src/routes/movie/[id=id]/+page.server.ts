@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types'; // TODO: check other places
+import type { PageServerLoad } from './$types';
 import type * as TMDB from '$lib/types/tmdb';
 import type { Movie, MovieDetails } from '$lib/types';
 import redis, { getMovieKey } from '$lib/redis';
