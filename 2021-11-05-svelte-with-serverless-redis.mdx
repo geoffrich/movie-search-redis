@@ -31,7 +31,7 @@ git checkout initial
 
 This is a small SvelteKit application that allows searching for movies and viewing their details using the TMDB API. It uses TypeScript to make interacting with the API responses easier, but this is not a requirement to use Redis or SvelteKit. The following routes already exist (corresponding to the folders in `src/routes`):
 
-- `/` renders the home page (corresponding to the `+page.svelte` file in the routes directory)
+- `/` renders the home page
 - `/search` renders a list of search results. It takes `query` and `page` as query params, e.g. `?query=star wars&page=3` shows the third page of results for "Star Wars"
 - `/movie/[id=id]` renders details for a movie with the given ID, e.g. `/movie/11`. While not important for this tutorial, `[id=id]` indicates that there is a parameter named `id` that needs to be validated by the `match` function in `src/params/id.ts`.
 
